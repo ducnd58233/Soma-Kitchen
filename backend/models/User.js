@@ -3,7 +3,15 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    name: {
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
         type: String,
         required: true
     },
@@ -14,7 +22,7 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: false
+        required: true
     },
     recipePosts: [{
         type: Schema.Types.ObjectId,

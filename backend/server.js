@@ -4,7 +4,11 @@ const app = express();
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const expressSession = require('express-session');
+const multer = require('multer');
+const path = require('path');
+
 const port = 9000;
+
 
 
 /* ---------------------------------------------------- 
@@ -17,12 +21,33 @@ mongoose.connect('mongodb://localhost/soma_kitchen', { useNewUrlParser: true, us
             END: Connect to database
 ---------------------------------------------------- */
 
+/* ---------------------------------------------------- 
+            START: Set Image Storage
+---------------------------------------------------- */
+let storageImage = multer.diskStorage({
+        destination: "../frontend/public/uploads/",
+        filename: function(req, file, cb){
+           cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+        }
+});
+
+const uploadImage = multer({
+        storage: storageImage,
+        limits:{fileSize: 1000000},
+}).single("photo");
+
+
+/* ---------------------------------------------------- 
+            END: Set Image Storage
+---------------------------------------------------- */
+
+
 
 /* ---------------------------------------------------- 
                 START: Middleware
 ---------------------------------------------------- */
 
-app.use(bodyParser.json({ type: 'application/json' }));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw());
 app.use(fileUpload());
@@ -33,6 +58,7 @@ app.use(expressSession({
 /* ---------------------------------------------------- 
                 END: Middleware
 ---------------------------------------------------- */
+
 
 
 /* ---------------------------------------------------- 
@@ -50,6 +76,9 @@ const redirectIfAuthenticatedMiddleware = require('./middlewares/redirectIfAuthe
 /* ---------------------------------------------------- 
         START: Declare folder of controller
 ---------------------------------------------------- */
+// Upload
+const postImageController = require('./app/controllers/Recipe/Upload/postImagesController');
+
 
 // Recipe
 const getAllRecipePostsController = require('./app/controllers/Recipe/getAllRecipePostsController');
@@ -93,6 +122,17 @@ app.post('/recipes', postRecipePostController);
 app.put('/recipes/:_id', updateRecipePostController);
 app.delete('/recipes/:_id', deleteRecipePostController);
 
+// Image Recipes Post
+app.post('/recipes/upload/photo', uploadImage, function(req, res, next) {
+        if(!err){
+                return res.send(200).end();
+        }
+        else {
+                return res.send(err)
+        }
+        
+});
+
 // Comment Recipes Post
 app.post('/comment', authMiddleware, commentController);
 
@@ -107,11 +147,11 @@ app.put('/cookings/:_id', updateCookingPostController);
 app.delete('/cookings/:_id', deleteCookingPostController);
 
 // Register Request
-app.get('/register', registerPageController)
+// app.get('/register', registerPageController)
 app.post('/auth/register', registerController);
 
 // Login Request
-app.get('/login', loginPageController);
+// app.get('/login', loginPageController);
 app.post('/auth/login', loginController);
 
 // Logout Request

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 module.exports = (req, res) => {
     let video = req.files.video;
-    video.mv(path.resolve(__dirname, '../../../', '/upload/videos/', video.name),
+    video.mv(path.resolve(__dirname, '../../../../', 'frontend/public/upload/videos/', video.name),
     (err) => {
         if (mongoose.Types.ObjectId.isValid(req.params._id)) {
             CookingPost.findByIdAndUpdate(
