@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {Row,Col,Container,Form,Button} from 'react-bootstrap';
 import FontAwesome from './common/FontAwesome';
 
@@ -8,50 +8,53 @@ class Login extends React.Component {
 	constructor(props) {
         super(props)
         this.state = {
+			name:'',
             email: "",
             password: ""
             , listOfUsers: []
             , valid: false
         }
     }
-	fetchData(){    
-		fetch(url, {mode: "cors"})
-			.then(response => response.json())
-			.then(json => this.setState({recipe: json}))
-			.catch(err => console.log(err))                     
-	  }
-	
-	  componentDidMount(){
-		this.fetchData();
-	  }
+	fetchClients() {
+        fetch("http://localhost:9000/api/users")
+            .then(res => res.json())
+            .then(json => this.setState({ listOfUsers: json }))
+    }
+    validateCheck() {
+        let count = 0;
+        this.state.listOfUsers.map((e) => {
+
+                if (e.email === this.state.email) {
+                    count++;
+                    if (e.password === this.state.password) {
+                        this.setState({ user: e.name });
+                        this.setState({ valid: true });
+                    }
+                    else {
+                        alert("invalid password")
+                    }
+                }
     
+    
+            })
+            if (count === 0) {
+                alert("invalid user")
+            }
+        }
+        
     handleChange(e) {
         let obj = {}
         obj[e.target.name] = e.target.value
         this.setState(obj)
 
     }
-	logIn(){
-        let emp = {
-            email: this.state.email,
-            password: this.state.password,
-            
-        }
-        fetch(url, {
-            headers: {
-                // 'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;application/json'
-            },
-            method: 'POST',
-            mode: 'cors',
-            body: JSON.stringify(emp)
-        })
+    componentDidMount() {
+        this.fetchClients();
     }
-
 	render() {
-		if (this.state.valid === true) {
-            return <Link to={'/' + this.state.name} />
-            }
+		if (this.state.valid===true) {
+			return<Redirect to={'/' + this.state.name} />  
+        }
     	return (
     	  <Container fluid className='bg-white'>
 	         <Row>
@@ -84,7 +87,7 @@ class Login extends React.Component {
 							        id="custom-checkbox"
 							        label="Remember password"
 							      />
-	                              <Link className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Sign in</Link>
+	                              <button onClick={this.validateCheck.bind(this)} className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Sign in</button>
 	                              <div className="text-center pt-3">
 	                                 Don’t have an account? <Link className="font-weight-bold" to="/register">Sign Up</Link>
 	                              </div>

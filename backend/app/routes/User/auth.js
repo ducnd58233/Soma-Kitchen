@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../../../models/User');
+const bodyParser = require('body-parser');
+
+router.use(bodyParser.json())
 
 
 
