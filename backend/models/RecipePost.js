@@ -10,8 +10,7 @@ const RecipePostSchema = new Schema({
     body: String,
     ingredients: String,
     guide: String,
-    username: String,
-    // image: String, 
+    image: String, 
     datePosted: {
         type: Date,
         default: new Date()

@@ -3,26 +3,24 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    firstName: {
+    name: {
         type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-        required: true
+        required: true,
+        min: 6,
+        max: 255
     },
     email: {
         type: String,
-        required: true
-    },
-    username: {
-        type: String,
         required: true,
-        unique: true
+        unique: true,
+        min: 6,
+        max: 255
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        min: 6,
+        max: 255
     },
     recipePosts: [{
         type: Schema.Types.ObjectId,
@@ -34,14 +32,6 @@ const UserSchema = new Schema({
     }]
 });
 
-UserSchema.pre('save', (next) => {
-    const user = this;
-    bcrypt.hash(user.password, 10, (err, encrypted) => {
-        console.log(err);
-        user.password = encrypted;
-        next();
-    })
-});
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

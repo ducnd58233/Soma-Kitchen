@@ -126,7 +126,7 @@ class RecipeDetail extends Component {
                     <div>{this.state.loadedPost.body}</div>
                     <div>{this.state.loadedPost.ingredients}</div>
                     <div>{this.state.loadedPost.guide}</div>
-                    <image src={this.state.loadedPost.image}/>
+                    {/* <image src={this.state.loadedPost.image}/> */}
                     <div className="Edit">
                         <button className="Delete"
                         onClick={this.deleteHandler}>Delete</button>
@@ -140,7 +140,7 @@ class RecipeDetail extends Component {
                             body: this.state.loadedPost.body,
                             ingredients: this.state.loadedPost.ingredients,
                             guide: this.state.loadedPost.guide,
-                            image: this.state.loadedPost.image
+                            // image: this.state.loadedPost.image
                         })}}>Update</button>
                     </div>
                     {updateSection}
