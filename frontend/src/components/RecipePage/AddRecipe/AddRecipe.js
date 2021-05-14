@@ -15,6 +15,7 @@ class AddRecipe extends Component {
       guide: '',
       image: null,
     };
+    this.saveRecipe = this.saveRecipe.bind(this);
   }
  
 
@@ -29,37 +30,48 @@ class AddRecipe extends Component {
     this.fetchData();
   }
 
-  onImageChange = e => {
-    e.preventDefault();    
-    fetch(url + "/upload/photo", {
-      mode: 'cors',
-      method: 'post',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      body: JSON.stringify({
-        image: this.state.image
-      })
-    })  
-  };
+  // onImageChange = e => {
+  //   e.preventDefault();    
+  //   const formData = new FormData();
+  //   formData.append('photo',this.state.image);
+  //   fetch(url, {
+  //     mode: 'cors',
+  //     method: 'post',
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data'
+  //     },
+  //     body: JSON.stringify({
+  //       image: formData
+  //     })
+  //   })  
+  // };
 
   
 
   saveRecipe = (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append(
+      'image',
+      this.state.image,
+      this.state.image.name
+    );
     if (this.state.title !== '' | this.state.body !== '' | this.state.ingredients !== '' | this.state.guide !== ''){
       fetch(url, {
         mode: 'cors',
         method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
+        // headers: {
+        //     // 'Content-Type': 'application/json',
+        //     // 'Accept': 'application/json'
+        //     'Content-Type': 'multipart/form-data',
+        //     'Accept': 'multipart/form-data'
+        // },
         body: JSON.stringify({ 
           title: this.state.title, 
           body: this.state.body,
           ingredients: this.state.ingredients,
           guide: this.state.guide,
+          image: formData
           
         })
   
@@ -69,6 +81,7 @@ class AddRecipe extends Component {
       .catch(err => console.log(err))    
   
       window.location.reload()
+      
     }
     else{
       return
@@ -80,6 +93,7 @@ class AddRecipe extends Component {
   }
 
   render() {
+    
     return (
       <div className="NewPost">
         <h1>Add a Post</h1>
@@ -108,12 +122,12 @@ class AddRecipe extends Component {
           onChange={(event) => this.setState({ guide: event.target.value })}
         />
         <label>Select Image</label>
-        {/* <input 
+        <input 
           type="file" 
-          name="photo" 
-          onChange={this.onImageChange}
-         
-        />  */}
+          name="image" 
+          // onChange={this.saveRecipe}
+          onChange={(event) => this.setState({ image: event.target.files[0] })}
+        /> 
         <button onClick={this.saveRecipe}>Save Recipe</button>
         <button onClick={this.addNewRecipe}>Add new</button>
 

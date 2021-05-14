@@ -6,7 +6,7 @@ const CookingPostSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    // video: String,
+    video: String,
     notice: String,
     datePosted: {
         type: Date,
