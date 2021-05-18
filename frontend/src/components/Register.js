@@ -11,57 +11,75 @@ class Register extends React.Component {
             name:"",
            email:"",
            password:"",
-           confirmpassword:""
-           ,listOfUsers:[],
-           valid : false
-           
+           confirmpassword:"",
+           listOfUsers:[],
+		   valid: false
+
         }
     }
-    fetchData(){    
-        fetch(url, {mode: "cors"})
-            .then(response => response.json())
-            .then(json => this.setState({listOfUsers: json}))
-            .catch(err => console.log(err))                     
-      }
-    
-      componentDidMount(){
-        this.fetchData();
-      }
-    
-    signUp = (e) => {
-        // e.preventDefault();
-        if (this.state.name !== '' | this.state.email !== '' | this.state.password !== '' | this.state.confirmpassword !== ''){
-          fetch(url, {
-            mode: 'cors',
-            method: 'POST',
+	fetchData() {
+        fetch("http://localhost:9000/api/users")
+            .then(res => res.json())
+            .then(json => this.setState({ listOfUsers: json }))
+    }
+    validateCheck()
+    {
+        let counter = 0;
+        this.state.listOfUsers.map((e)=>{
+            if(e.email === this.state.email || e.name === this.state.name)
+            {
+                counter +=1;
+            }
+        })
+        if(counter >0)
+        {
+            alert("user is already registered")
+        }
+        else
+        {
+            if(this.state.password ===  this.state.confirmpassword)
+            {
+                this.signUp();
+               alert("Registration Successful!")
+               this.setState({ valid: true });
+            }
+            else
+            {
+                alert("confirmed password does not match")
+            }
+        }
+
+    }
+    signUp()
+    {
+        let emp = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            
+        }
+        fetch(url, {
             headers: {
-                'Content-Type': 'application/json',
-                
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
-                name: this.state.name, 
-                email: this.state.email,
-                password: this.state.password,
-                confirmpassword: this.state.confirmpassword,
-              // image: this.formData,
-            })
-      
-          })
-          .then(response => response.json())
-          // .then(json => this.fetchData())
-          .catch(err => console.log(err))    
-      
-        //   window.location.reload()
-        }
-        else{
-          return
-        }
-      }
+            method: 'POST',
+            body: JSON.stringify(emp)
+        })
+    }
+    handleChange(e) {
+        let obj = {}
+        obj[e.target.name] = e.target.value
+        this.setState(obj)
+    }
+    componentDidMount() {
+        this.fetchData();
+    }
      
-    //   addNewRecipe = () => {
-    //     this.setState({title: '', body: '', ingredients: '', guide: '', image: null})
-    //   }
-	render() {		
+	render(){
+		if (this.state.valid===true){
+			this.signUp();
+		}
     	return (
     	  <Container fluid className='bg-white'>
 	         <Row>
@@ -72,36 +90,36 @@ class Register extends React.Component {
 	                     <Row>
 	                        <Col md={9} lg={8} className="mx-auto pl-5 pr-5">
 	                           <h3 className="login-heading mb-4">New Buddy!</h3>
-	                           <Form onChange={this.signUp}>
+	                           <Form>
 							   <div className="form-label-group">
-	                                 <input type="text" id="inputName" placeholder="Enter name" 
+	                                 <Form.Control type="text" id="inputName" placeholder="Enter name" 
 									 name ="name"
 									 value = {this.state.name}
-									 onChange={(event) => this.setState({ name: event.target.value })}/>
+									 onChange={this.handleChange.bind(this)}/>
 	                                 <Form.Label htmlFor="inputName">User Name</Form.Label>
 	                              </div>
 	                              <div className="form-label-group">
-	                                 <input type="email" id="inputEmail" placeholder="Email address" 
+	                                 <Form.Control type="email" id="inputEmail" placeholder="Email address" 
 									 name ="email"
 									 value = {this.state.email}
-									 onChange={(event) => this.setState({ email: event.target.value })}/>
+									 onChange={this.handleChange.bind(this)}/>
 	                                 <Form.Label htmlFor="inputEmail">Email address / Mobile</Form.Label>
 	                              </div>
 	                              <div className="form-label-group">
-	                                 <input type="password" id="inputPassword" placeholder="new-password" 
+	                                 <Form.Control type="password" id="inputPassword" placeholder="new-password" 
 									 name ="password" 
 									 value = {this.state.password}
-									 onChange={(event) => this.setState({ password: event.target.value })}/>
+									 onChange={this.handleChange.bind(this)}/>
 	                                 <Form.Label htmlFor="inputPassword">Password</Form.Label>
 	                              </div>
 	                              <div className="form-label-group mb-4">
-	                                 <input type="password" id="inputPassword1" placeholder="password" 
+	                                 <Form.Control type="password" id="inputPassword1" placeholder="password" 
 									 name ="confirmpassword" 
 									 value = {this.state.confirmpassword}
-									 onChange={(event) => this.setState({ confirmpassword: event.target.value })}/>
+									 onChange={this.handleChange.bind(this)}/>
 	                                 <Form.Label htmlFor="inputPassword1">Confirm Password</Form.Label>
 	                              </div>
-	                              <button to="/login" type="submit" onClick={this.signUp} className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Sign Up</button>
+	                              <button to="/login" type="submit" onClick={this.validateCheck.bind(this)} className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Sign Up</button>
 	                              <div className="text-center pt-3">
 	                                 Already have an account? <Link className="font-weight-bold" to="/login">Sign In</Link>
 	                              </div>
@@ -116,6 +134,5 @@ class Register extends React.Component {
     	);
     }
 }
-
 
 export default Register;
