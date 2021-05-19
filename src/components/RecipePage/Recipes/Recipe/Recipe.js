@@ -8,7 +8,6 @@ const recipe = (props) => (
         title={props.title}
         subTitle='North Indian • American • Pure veg'
         imageClass='img-fluid item-img'
-		linkUrl='detail'
         offerText='By Diana Moutsopoulos'
         time='35–45 min'
         showPromoted={true}

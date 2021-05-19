@@ -2,12 +2,11 @@ import React from 'react';
 import {Switch,Route} from 'react-router-dom';
 import {NavLink,Link } from 'react-router-dom';
 import {Row,Col,Container,Image} from 'react-bootstrap';
-import Offers from './myaccount/Offers';
-import Orders from './myaccount/Orders';
-import Favourites from './myaccount/Favourites';
-import Payments from './myaccount/Payments';
-import Addresses from './myaccount/Addresses';
-import EditProfileModal from './modals/EditProfileModal';
+import Orders from './Orders';
+import Favourites from './Favourites';
+import Payments from './Payments';
+import Addresses from './Addresses';
+import EditProfileModal from '../modals/EditProfileModal';
 
 class MyAccount extends React.Component {
   constructor(props, context) {
@@ -63,7 +62,6 @@ class MyAccount extends React.Component {
                  <Col md={9}>
                   <Switch>
                     <Route path="/myaccount/orders" exact component={Orders} />
-                    <Route path="/myaccount/offers" exact component={Offers} />
                     <Route path="/myaccount/favourites" exact component={Favourites} />
                     <Route path="/myaccount/payments" exact component={Payments} />
                     <Route path="/myaccount/addresses" exact component={Addresses} />

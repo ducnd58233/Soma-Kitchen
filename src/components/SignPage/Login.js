@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import {Row,Col,Container,Form,Button} from 'react-bootstrap';
-import FontAwesome from './common/FontAwesome';
+import FontAwesome from '../common/FontAwesome';
 
 class Login extends React.Component {
 	constructor(props) {

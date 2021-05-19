@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {  Link, withRouter } from 'react-router-dom'
 
-import FoodImage from '../../../assets/images/steak.jpg'
-
 import Auxiliary from '../../../hoc/Auxiliary'
 import './RecipeDetail.css';
 
@@ -24,7 +22,7 @@ class RecipeDetail extends Component {
       
   
     async fetchData(){    
-        await fetch(url + "/" + this.props.match.params.id , {mode: "cors"})
+        await fetch(url + "/" + this.props.match.params._id , {mode: "cors"})
             .then(response => response.json())
             .then(json=>this.setState({ loadedPost: json }))
             .catch(err => console.log(err))                     
@@ -33,8 +31,8 @@ class RecipeDetail extends Component {
     componentDidMount() {
         console.log(this.state.loadedPost);
 
-        if(this.props.match.params.id){
-            if( !this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost._id !== this.props.match.params.id) ){
+        if(this.props.match.params._id){
+            if( !this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost._id !== this.props.match.params._id) ){
                 try{
                     this.fetchData()
                 }
@@ -47,7 +45,7 @@ class RecipeDetail extends Component {
 
     deleteHandler = () => {
         if(window.confirm('Do you want to delete?')){
-            fetch(url + "/" + this.props.match.params.id, {
+            fetch(url + "/" + this.props.match.params._id, {
                 method: 'delete',
             }).then(res => res.json())
             .then(json => this.fetchData())
@@ -74,7 +72,7 @@ class RecipeDetail extends Component {
                             <div className="w3-third">
                                 <div className= "w3-white w3-text-grey w3-card-4" >
                                     <div className="w3-display-container">
-                                        <img src={FoodImage} alt="Food" style={{width: '100%'}} />
+                                        <img src={this.state.loadedPost.image} alt="Food" style={{width: '100%'}} />
                                         <div className="w3-display-bottomleft w3-container w3-text-black">
                                             <h1>{this.state.loadedPost.title}</h1>
                                         </div>

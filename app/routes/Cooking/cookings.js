@@ -8,7 +8,7 @@ const verifyToken = require('../../../middlewares/verifyToken');
                 START: Storage
 ---------------------------------------------------- */
 let storage = multer.diskStorage({
-    destination: "./public/img/uploads/cookings",
+    destination: "./uploads/cookings",
     filename: function (req, file, cb) {
         let fileFormat = (file.originalname).split(".");
         cb(null, file.fieldname + '-' + Date.now() + '.' + fileFormat[fileFormat.length - 1])
